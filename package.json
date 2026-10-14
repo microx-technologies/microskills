@@ -1,0 +1,18 @@
+{
+  "name": "@microx/microskills",
+  "version": "0.1.0",
+  "description": "Collection of official AI agent skills for microx ecosystem",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microx-technologies/microskills.git"
+  },
+  "keywords": [
+    "agent-skills",
+    "skills",
+    "microx",
+    "microform",
+    "ai-agent"
+  ],
+  "author": "microx",
+  "license": "MIT"
+}
