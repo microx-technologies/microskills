@@ -1,89 +1,87 @@
-# Estructuras de Layout y Renderizado Dinámico
+# Layout Structures & Dynamic Rendering
 
-`microform` desacopla la definición del formulario del marcado HTML usando estructuras declarativas tipadas (`FieldStructure`) y componentes de renderizado de React.
+`microform` defines forms as typed structural graphs (`FieldStructure`), separating layout topology from HTML markup.
 
----
+## 1. Declaring a `FieldStructure`
 
-## 1. Definir una `FieldStructure`
-
-Una estructura organiza los campos en **secciones**, **filas** y **columnas** (basadas en un grid de 12 columnas):
+Layouts organize fields into **sections**, **rows**, and **columns** using a 12-column grid budget:
 
 ```tsx
 import type { FieldStructure } from "microform";
 
-export type ProfileFormValues = {
+export type UserFormValues = {
   fullName: string;
   age: number;
   email: string;
   bio?: string;
 };
 
-export const profileStructure: FieldStructure<keyof ProfileFormValues> = [
+export const userStructure: FieldStructure<keyof UserFormValues> = [
   {
     kind: "section",
     key: "personal",
-    title: "Información Personal",
-    description: "Datos de contacto iniciales",
+    title: "Personal Information",
+    description: "Primary contact details",
     children: [
       {
         fields: [
           {
             type: "text",
             name: "fullName",
-            label: "Nombre Completo",
-            placeholder: "Ada Lovelace",
-            colspan: 8, // 8 de 12 columnas
+            label: "Full Name",
+            colspan: 8, // 8 / 12 columns
           },
           {
             type: "number",
             name: "age",
-            label: "Edad",
-            colspan: 4, // 4 de 12 columnas (8 + 4 = 12)
+            label: "Age",
+            colspan: 4, // 4 / 12 columns (8 + 4 = 12)
           },
         ],
       },
       {
         type: "email",
         name: "email",
-        label: "Correo Electrónico",
-        // Sin colspan = 12 columnas (ancho completo)
+        label: "Email Address",
+        // Unset colspan defaults to 12
       },
     ],
   },
   {
     type: "textarea",
     name: "bio",
-    label: "Biografía",
+    label: "Biography",
   },
 ];
 ```
 
 ---
 
-## 2. Inyección con `MicroformProvider` y `FormFields`
+## 2. Rendering with `MicroformProvider` and `FormFields`
 
-Conecta React Hook Form con la estructura mediante `FormFields` e `InferFieldInput`:
+Binds React Hook Form to the structure. `renderItem` maps each field definition into UI markup and calls `InferFieldInput`:
 
 ```tsx
 import { useForm } from "react-hook-form";
+import { createFormDefaults } from "microform";
 import { FormFields, InferFieldInput, MicroformProvider } from "microform/react";
 import { microform } from "./microform-setup";
-import { profileSchema } from "./schema";
+import { userSchema, userStructure, type UserFormValues } from "./schema";
 
-export function ProfileForm() {
-  const form = useForm({
-    defaultValues: createFormDefaults(profileSchema),
+export function UserForm() {
+  const form = useForm<UserFormValues>({
+    defaultValues: createFormDefaults(userSchema),
   });
 
   return (
     <MicroformProvider value={microform}>
       <FormFields
-        structure={profileStructure}
+        structure={userStructure}
         control={form.control}
-        schema={profileSchema}
+        schema={userSchema}
         renderItem={(field, { rhf, fieldState, required }) => (
           <div className="space-y-1.5">
-            <label htmlFor={rhf.name} className="block text-sm font-medium">
+            <label htmlFor={rhf.name} className="text-sm font-medium">
               {field.label}
               {required && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -99,7 +97,7 @@ export function ProfileForm() {
             />
 
             {field.description && (
-              <p className="text-xs text-gray-500">{field.description}</p>
+              <p className="text-xs text-zinc-500">{field.description}</p>
             )}
 
             {fieldState.error && (
@@ -115,20 +113,20 @@ export function ProfileForm() {
 
 ---
 
-## 3. Formulario Completo de Alto Nivel con `StructForm`
+## 3. High-Level Form Wrapper (`StructForm`)
 
-Si deseas un componente contenedor estándar que incluya el `<form>` y el botón de submit:
+`StructForm` encapsulates `<form>` element handling and standard submit buttons:
 
 ```tsx
 import { StructForm } from "microform/react";
 
 <MicroformProvider value={microform}>
   <StructForm
-    structure={profileStructure}
+    structure={userStructure}
     form={form}
-    schema={profileSchema}
+    schema={userSchema}
     onSubmit={onSubmit}
-    submitLabel="Guardar Cambios"
+    submitLabel="Save Changes"
     renderItem={(field, { rhf, required }) => (
       <InferFieldInput
         type={field.type}

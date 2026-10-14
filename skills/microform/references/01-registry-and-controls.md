@@ -1,12 +1,8 @@
-# Registro de Controles y Extensibilidad (OCP)
+# Control Registry & Extensibility (OCP)
 
-En `microform`, los controles son funciones de renderizado desacopladas de cualquier librería visual fija. El principio Open/Closed permite crear cualquier input personalizado sin modificar el núcleo.
+Controls in `microform` are pure render functions decoupled from visual design systems. New controls extend the registry without altering the core package.
 
----
-
-## 1. Definir un Control con `defineControl`
-
-Cada control declara su identificador `type` y su función renderizadora:
+## 1. Defining a Control (`defineControl`)
 
 ```tsx
 import { defineControl } from "microform";
@@ -23,26 +19,23 @@ export const textControl = defineControl({
       onBlur={onBlur}
       disabled={disabled}
       placeholder={props.placeholder as string}
-      className="input-class"
     />
   ),
 });
 ```
 
-### Argumentos del Renderer Context:
-- `value`: Valor actual del campo.
-- `inputValue`: Representación en string escalar inferida automáticamente.
-- `onChange`: Callback para notificar cambios a React Hook Form.
-- `onBlur`: Callback para marcar el campo como tocado (*touched*).
-- `disabled`: Booleano opcional si el campo está inhabilitado.
-- `name`: Nombre del campo en el formulario.
-- `props`: Atributos adicionales definidos en la estructura (ej: `placeholder`, `options`, `min`, `max`).
+### Renderer Context Properties:
+- `value`: Raw value from form state.
+- `inputValue`: String representation for scalar inputs.
+- `onChange`: State update callback `(val: Value | undefined) => void`.
+- `onBlur`: Touched state trigger `() => void`.
+- `disabled`: Boolean field state.
+- `name`: Target field name.
+- `props`: Passthrough props declared on the field structure (`placeholder`, `options`, `min`, `max`, etc.).
 
 ---
 
-## 2. Controles Personalizados Ricos
-
-Para controles avanzados (ejemplo: un selector de calificación con estrellas):
+## 2. Rich Custom Controls
 
 ```tsx
 export const ratingControl = defineControl({
@@ -57,7 +50,7 @@ export const ratingControl = defineControl({
             type="button"
             disabled={disabled}
             onClick={() => onChange?.(star)}
-            className={star <= current ? "text-yellow-400" : "text-gray-300"}
+            className={star <= current ? "text-amber-400" : "text-zinc-300"}
           >
             ★
           </button>
@@ -70,23 +63,27 @@ export const ratingControl = defineControl({
 
 ---
 
-## 3. Crear la Instancia del Registry
-
-Agrupa los controles usando `createMicroform`:
+## 3. Creating & Extending the Registry
 
 ```tsx
 import { createMicroform } from "microform";
 import { textControl } from "./controls/text";
 import { ratingControl } from "./controls/rating";
 
+// Static registry instantiation
 export const microform = createMicroform({
   controls: [textControl, ratingControl],
 });
+
+// Dynamic registration at runtime
+microform.register("color_picker", ({ value, onChange }) => (
+  <input type="color" value={value} onChange={(e) => onChange?.(e.target.value)} />
+));
 ```
 
-### Métodos de la Instancia `microform`:
-- `register(type, renderer)`: Registra un control adicional dinámicamente.
-- `registerAll(renderersMap)`: Registra múltiples controles en bloque.
-- `resolve(type)`: Obtiene el renderer correspondiente a un tipo.
-- `has(type)`: Verifica si un tipo de control está registrado.
-- `types()`: Retorna un array con todos los tipos disponibles.
+### Registry API:
+- `register(type, renderer)`: Adds or overrides a single control.
+- `registerAll({ type: renderer })`: Batch registers controls.
+- `resolve(type)`: Retrieves the renderer for a type identifier.
+- `has(type)`: Boolean check for registered type.
+- `types()`: Array of all registered type keys.

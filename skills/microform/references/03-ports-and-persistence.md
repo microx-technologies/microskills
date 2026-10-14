@@ -1,12 +1,10 @@
-# Persistencia de Borradores y Puertos de Almacenamiento
+# Draft Persistence & Storage Ports
 
-`microform` implementa el patrón de Puertos y Adaptadores para desacoplar el motor de persistencia del navegador (`localStorage`, `sessionStorage`, `IndexedDB` o memorias de prueba).
+`microform` uses a Ports and Adapters pattern for persistence, decoupling storage drivers (`localStorage`, `sessionStorage`, `IndexedDB`, or in-memory test mocks) from form components.
 
----
+## 1. StorageAdapter Port
 
-## 1. El Puerto `StorageAdapter`
-
-Todo adaptador de almacenamiento implementa la interfaz `StorageAdapter`:
+Any storage engine implements `StorageAdapter`:
 
 ```ts
 import type { StorageAdapter } from "microform";
@@ -23,9 +21,7 @@ export function createLocalStorageAdapter(): StorageAdapter {
     set: (key: string, value: string) => {
       try {
         localStorage.setItem(key, value);
-      } catch {
-        // quota exceeded o navegación privada
-      }
+      } catch {}
     },
     remove: (key: string) => {
       try {
@@ -36,13 +32,13 @@ export function createLocalStorageAdapter(): StorageAdapter {
 }
 ```
 
-> **Tip**: En pruebas unitarias, `microform` incluye `createMemoryStorage({ "initial:key": "value" })` que no depende del DOM.
+> **Testing**: `microform` exports `createMemoryStorage({ [key]: value })` for headless or unit test suites without DOM APIs.
 
 ---
 
-## 2. Autoguardado con el Hook `usePersistence`
+## 2. Automatic Field Sync via `usePersistence`
 
-Conecta campos individuales de React Hook Form al adaptador de almacenamiento. Restaura el valor al montar y sincroniza cada cambio:
+Binds a specific React Hook Form field to storage. Restores persisted value on mount and writes updates on change:
 
 ```tsx
 import { useForm } from "react-hook-form";
@@ -51,10 +47,10 @@ import { createLocalStorageAdapter } from "./adapters";
 
 const storage = createLocalStorageAdapter();
 
-export function UserEditor() {
+export function DraftUserEditor() {
   const form = useForm({ defaultValues: { name: "", notes: "" } });
 
-  // Persistir campo "name"
+  // Sync field "name"
   usePersistence({
     control: form.control,
     name: "name",
@@ -63,7 +59,7 @@ export function UserEditor() {
     onRestore: (val) => form.setValue("name", String(val)),
   });
 
-  // Persistir campo "notes"
+  // Sync field "notes"
   usePersistence({
     control: form.control,
     name: "notes",
@@ -82,10 +78,10 @@ export function UserEditor() {
 }
 ```
 
-### Opciones de `usePersistence`:
-- `control`: El objeto `control` retornado por `useForm()`.
-- `name`: Nombre del campo en el formulario.
-- `storage`: Instancia de `StorageAdapter`.
-- `persistKey`: Clave única para identificar el dato en el almacenamiento.
-- `prefix`: Prefijo de clave opcional (por defecto `form-persist:`).
-- `onRestore`: Callback ejecutado cuando se encuentra un valor persistido previamente.
+### `usePersistence` Parameters:
+- `control`: React Hook Form `control` instance.
+- `name`: Target field name.
+- `storage`: `StorageAdapter` implementation.
+- `persistKey`: Unique storage identifier.
+- `prefix`: Key prefix (defaults to `"form-persist:"`).
+- `onRestore`: Invoked on mount if a persisted value is found.

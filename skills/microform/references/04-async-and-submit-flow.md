@@ -1,36 +1,34 @@
-# Consultas Asíncronas, Limpieza y Submit Flow
+# Async Queries, Variable Cleaning, and Submit Flow
 
-`microform` proporciona utilidades de arquitectura limpia para el manejo de fuentes remotas con paginación/debounce, sanitización de datos y orquestación de mutaciones.
+`microform` supplies architectural primitives for remote paginated data sources, recursive payload sanitization, and standardized mutation lifecycles.
 
----
+## 1. Variable Sanitization (`cleanVars`)
 
-## 1. Limpieza de Variables con `cleanVars`
-
-Normaliza objetos y arrays recursivamente antes de enviarlos a mutaciones o filtros:
+Recursively cleans objects and arrays prior to mutation or query dispatch:
 
 ```ts
 import { cleanVars } from "microform";
 
 const raw = {
-  search: "  hola mundo  ",
+  search: "  Jane Doe  ",
   emptyField: "   ",
-  age: 25,
+  score: 100,
 };
 
-// Modo "null" (ideal para GraphQL o APIs REST que esperan null en campos vacíos):
+// "null" mode: Blank strings become null (GraphQL / SQL mutations)
 const forMutation = cleanVars(raw, { empty: "null" });
-// { search: "hola mundo", emptyField: null, age: 25 }
+// { search: "Jane Doe", emptyField: null, score: 100 }
 
-// Modo "omit" (por defecto, ideal para queries, filtros y URLs):
+// "omit" mode (default): Blank strings are stripped (search params / URL filters)
 const forQuery = cleanVars(raw);
-// { search: "hola mundo", age: 25 } — omite 'emptyField'
+// { search: "Jane Doe", score: 100 }
 ```
 
 ---
 
-## 2. Búsqueda y Paginación Asíncrona con `useAsyncQuery`
+## 2. Paginated Remote Source with `useAsyncQuery`
 
-Maneja debouncing automático, protección contra respuestas obsoletas (*race conditions*) y estado de carga:
+Handles built-in debouncing, stale response discard (race condition protection), and loading state:
 
 ```tsx
 import { useState } from "react";
@@ -42,7 +40,7 @@ interface UserItem {
   name: string;
 }
 
-// 1. Definir la fuente (QuerySource)
+// 1. Declare query port adapter
 const userSource: QuerySource<UserItem> = {
   fetch: async ({ search = "", page = 1, pageSize = 10 }) => {
     const res = await fetch(`/api/users?q=${search}&page=${page}&limit=${pageSize}`);
@@ -54,8 +52,8 @@ const userSource: QuerySource<UserItem> = {
   },
 };
 
-// 2. Consumir en componente
-export function UserPicker() {
+// 2. Consume in component
+export function UserSearchSelect() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
@@ -64,7 +62,7 @@ export function UserPicker() {
     search,
     page,
     pageSize: 10,
-    debounceMs: 300,
+    debounceMs: 250,
   });
 
   return ( ... );
@@ -73,14 +71,14 @@ export function UserPicker() {
 
 ---
 
-## 3. Orquestación del Envío con `handleSubmitFlow`
+## 3. Standardized Mutation Orchestration (`handleSubmitFlow`)
 
-Ejecuta el ciclo de vida completo de un submit: sanitización con `cleanVars({ empty: "null" })`, ejecución, notificación de éxito o error, reseteo del formulario e invalidación de caché:
+Coordinates sanitization (`cleanVars({ empty: "null" })`), execution, toast notifications, form reset, and cache invalidation:
 
 ```ts
 import { handleSubmitFlow } from "microform";
 import type { NotifyAdapter } from "microform";
-import { toast } from "sonner"; // o cualquier UI de toast
+import { toast } from "sonner";
 
 const notify: NotifyAdapter = {
   success: (msg) => toast.success(msg),
@@ -92,20 +90,20 @@ const onSubmit = async (values: FormValues) => {
     mutation: async (cleanedVars) => {
       return await api.updateUser(cleanedVars);
     },
-    vars: values, // Se limpia automáticamente
+    vars: values, // Sanitized automatically
     notify,
-    successMessage: "Usuario actualizado con éxito",
+    successMessage: "User profile updated",
     resetForm: () => {
       localStorage.removeItem("draft_user");
       form.reset();
     },
     invalidate: () => {
-      refetchUsersList();
+      refetchUserList();
     },
   });
 
   if (ok) {
-    console.log("Operación completada exitosamente");
+    // Navigate or close modal
   }
 };
 ```

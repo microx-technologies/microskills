@@ -1,8 +1,6 @@
-# Recetas y Ejemplo Completo (CheatSheet)
+# Recipes & Canonical Cheatsheet
 
-Plantilla canónica completa para crear un formulario robusto con `microform`, `zod` y `react-hook-form`.
-
----
+Complete, production-ready form binding `microform`, `zod`, and `react-hook-form`.
 
 ```tsx
 import * as React from "react";
@@ -21,11 +19,9 @@ import {
   MicroformProvider,
 } from "microform/react";
 
-// ==========================================
-// 1. ESQUEMA DE VALIDACIÓN CON ZOD
-// ==========================================
+// 1. Zod Schema
 export const projectSchema = z.object({
-  title: z.string().min(3, "El título debe tener al menos 3 caracteres"),
+  title: z.string().min(3, "Title must have at least 3 characters"),
   category: z.enum(["web", "mobile", "infra"]).default("web"),
   estimatedHours: z.number().min(1).default(10),
   description: z.string().optional(),
@@ -33,28 +29,26 @@ export const projectSchema = z.object({
 
 export type ProjectFormValues = z.infer<typeof projectSchema>;
 
-// ==========================================
-// 2. ESTRUCTURA VISUAL (GRID 12 COLUMNAS)
-// ==========================================
+// 2. 12-Column Grid Layout Structure
 export const projectStructure: FieldStructure<keyof ProjectFormValues> = [
   {
     kind: "section",
     key: "general",
-    title: "Datos del Proyecto",
+    title: "Project Details",
     children: [
       {
         fields: [
           {
             type: "text",
             name: "title",
-            label: "Título",
-            placeholder: "Ej: Plataforma de pagos",
+            label: "Title",
+            placeholder: "e.g. Payment Gateway",
             colspan: 8,
           },
           {
             type: "number",
             name: "estimatedHours",
-            label: "Horas Estimadas",
+            label: "Estimated Hours",
             colspan: 4,
           },
         ],
@@ -62,26 +56,24 @@ export const projectStructure: FieldStructure<keyof ProjectFormValues> = [
       {
         type: "select",
         name: "category",
-        label: "Categoría",
+        label: "Category",
         options: [
-          { value: "web", label: "Web App" },
-          { value: "mobile", label: "Mobile App" },
-          { value: "infra", label: "Infraestructura" },
+          { value: "web", label: "Web Application" },
+          { value: "mobile", label: "Mobile Application" },
+          { value: "infra", label: "Infrastructure" },
         ],
       },
       {
         type: "textarea",
         name: "description",
-        label: "Descripción detallada",
-        placeholder: "Describe los objetivos del proyecto...",
+        label: "Description",
+        placeholder: "Brief overview of deliverables...",
       },
     ],
   },
 ];
 
-// ==========================================
-// 3. REGISTRO DE CONTROLES
-// ==========================================
+// 3. Control Registry
 const textControl = defineControl({
   type: "text",
   renderer: ({ value, onChange, onBlur, disabled, name, props }) => (
@@ -119,15 +111,11 @@ export const microform = createMicroform({
   controls: [textControl, numberControl],
 });
 
-// ==========================================
-// 4. COMPONENTE DE FORMULARIO
-// ==========================================
+// 4. Form Component
 export function ProjectForm({ onSave }: { onSave: (data: ProjectFormValues) => void }) {
   const defaultValues = React.useMemo(() => createFormDefaults(projectSchema), []);
 
-  const form = useForm<ProjectFormValues>({
-    defaultValues,
-  });
+  const form = useForm<ProjectFormValues>({ defaultValues });
 
   const onSubmit = (rawValues: ProjectFormValues) => {
     const cleaned = cleanVars(rawValues, { empty: "null" });
@@ -159,7 +147,7 @@ export function ProjectForm({ onSave }: { onSave: (data: ProjectFormValues) => v
               />
 
               {field.description && (
-                <p className="text-xs text-gray-500">{field.description}</p>
+                <p className="text-xs text-zinc-500">{field.description}</p>
               )}
 
               {fieldState.error && (
@@ -177,13 +165,13 @@ export function ProjectForm({ onSave }: { onSave: (data: ProjectFormValues) => v
             onClick={() => form.reset(defaultValues)}
             className="px-4 py-2 border rounded text-sm"
           >
-            Restablecer
+            Reset
           </button>
           <button
             type="submit"
             className="px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium"
           >
-            Guardar Proyecto
+            Save Project
           </button>
         </div>
       </form>

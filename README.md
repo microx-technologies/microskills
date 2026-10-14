@@ -1,29 +1,52 @@
 # microskills
 
-Colección de **Skills oficiales para Agentes de IA** (Claude Code, Cursor, Copilot, Antigravity, etc.) del ecosistema **microx**.
+Collection of **Official AI Agent Skills** (Claude Code, Cursor, Copilot, Antigravity, etc.) for the **microx** ecosystem.
 
-## 📦 Instalación con `bunx skills`
+## 📦 Installation with `npx skills`
 
-Puedes instalar cualquiera de las skills directamente en tu proyecto usando el comando `bunx skills add`:
+Install skills directly into your project workspace using the open skills CLI:
 
-### Instalar la skill de `microform`
+### Install `microform` skill
 ```bash
-# Vía flag --skill
-bunx skills add microx-technologies/microskills --skill microform
+# Via --skill flag
+npx skills add microx-technologies/microskills --skill microform
 
-# O apuntando directamente a la subcarpeta
-bunx skills add microx-technologies/microskills/skills/microform
+# Or pointing directly to the skill subdirectory
+npx skills add microx-technologies/microskills/skills/microform
 ```
 
-### Instalar todas las skills o elegir interactivamente
+### Install interactively or pull all skills
 ```bash
-bunx skills add microx-technologies/microskills
+npx skills add microx-technologies/microskills
 ```
 
 ---
 
-## 🛠 Skills Disponibles
+## 🛠 Available Skills
 
-| Skill | Descripción | Ruta |
+| Skill | Description | Path |
 | :--- | :--- | :--- |
-| **`microform`** | Motor headless de formularios, esquemas Zod, registro tipado de controles, persistencia y submit. | [`skills/microform`](skills/microform) |
+| **`microform`** | Headless form engine, Zod defaults derivation, 12-column grid layout, typed control registry, draft persistence, and submit orchestration. | [`skills/microform`](skills/microform) |
+
+---
+
+## 📐 Architecture: Progressive Disclosure
+
+This repository strictly implements the **Progressive Disclosure** pattern to preserve agent context windows:
+
+```text
+microskills/
+├── package.json
+├── README.md
+└── skills/
+    └── microform/
+        ├── SKILL.md            # Entry point: metadata, core rules, and capability router
+        ├── rules/              # Normative specifications
+        │   └── form-spec.md    # Form construction specification (binding on agents)
+        └── references/         # On-demand technical references
+            ├── 01-registry-and-controls.md
+            ├── 02-structure-and-rendering.md
+            ├── 03-ports-and-persistence.md
+            ├── 04-async-and-submit-flow.md
+            └── 05-recipes-and-cheatsheet.md
+```
