@@ -11,7 +11,7 @@ Screens live as individual `.tsx` files. They should look and feel like producti
 ```tsx
 // screens/LoginScreen.tsx
 import * as React from "react";
-import { Trigger } from "@microx-technologies/microwireflow";
+import { Trigger } from "microwireflow";
 
 export function LoginScreen() {
   return (

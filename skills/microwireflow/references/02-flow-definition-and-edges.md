@@ -6,12 +6,12 @@ Flows in `microwireflow` bind screen nodes and transition connectors together wi
 
 ## 1. Defining a Flow (`defineFlow`)
 
-Import `defineFlow` from the dedicated lightweight subpath `@microx-technologies/microwireflow/flow`:
+Import `defineFlow` from the dedicated lightweight subpath `microwireflow/flow`:
 
 ```tsx
 // flows/authFlow.tsx
 import * as React from "react";
-import { defineFlow } from "@microx-technologies/microwireflow/flow";
+import { defineFlow } from "microwireflow/flow";
 import { LoginScreen } from "../screens/LoginScreen";
 import { DashboardScreen } from "../screens/DashboardScreen";
 import { ResetPasswordScreen } from "../screens/ResetPasswordScreen";

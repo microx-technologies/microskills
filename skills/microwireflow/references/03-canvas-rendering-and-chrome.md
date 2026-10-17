@@ -6,13 +6,13 @@ The `<Wireflow />` component renders the full interactive React Flow canvas with
 
 ## 1. Hosting the Canvas
 
-Import `Wireflow` and the mandatory stylesheet from `@microx-technologies/microwireflow`:
+Import `Wireflow` and the mandatory stylesheet from `microwireflow`:
 
 ```tsx
 // App.tsx
 import * as React from "react";
-import { Wireflow } from "@microx-technologies/microwireflow";
-import "@microx-technologies/microwireflow/styles.css";
+import { Wireflow } from "microwireflow";
+import "microwireflow/styles.css";
 import { authFlow } from "./flows/authFlow";
 
 export function App() {
@@ -85,7 +85,7 @@ export type WireflowProps = {
 `microwireflow` provides programmatic utilities to export the canvas for documentation reviews or presentations:
 
 ```tsx
-import { exportAsPng, exportAsSvg } from "@microx-technologies/microwireflow";
+import { exportAsPng, exportAsSvg } from "microwireflow";
 
 // Export as PNG image file download
 await exportAsPng({

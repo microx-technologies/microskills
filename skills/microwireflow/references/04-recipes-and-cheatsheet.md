@@ -9,7 +9,7 @@ Complete, production-ready wireflow binding screens, transition triggers, and in
 ```tsx
 // screens/AuthScreens.tsx
 import * as React from "react";
-import { Trigger } from "@microx-technologies/microwireflow";
+import { Trigger } from "microwireflow";
 
 export function LoginScreen() {
   return (
@@ -98,7 +98,7 @@ export function ForgotPasswordScreen() {
 ```tsx
 // flows/authFlow.tsx
 import * as React from "react";
-import { defineFlow } from "@microx-technologies/microwireflow/flow";
+import { defineFlow } from "microwireflow/flow";
 import { LoginScreen, DashboardScreen, ForgotPasswordScreen } from "../screens/AuthScreens";
 
 export const authFlow = defineFlow({
@@ -165,8 +165,8 @@ export const authFlow = defineFlow({
 ```tsx
 // App.tsx
 import * as React from "react";
-import { Wireflow } from "@microx-technologies/microwireflow";
-import "@microx-technologies/microwireflow/styles.css";
+import { Wireflow } from "microwireflow";
+import "microwireflow/styles.css";
 import { authFlow } from "./flows/authFlow";
 
 export function App() {

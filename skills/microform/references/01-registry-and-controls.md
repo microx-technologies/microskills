@@ -5,7 +5,7 @@ Controls in `microform` are pure render functions decoupled from visual design s
 ## 1. Defining a Control (`defineControl`)
 
 ```tsx
-import { defineControl } from "@microx-technologies/microform";
+import { defineControl } from "microform";
 
 export const textControl = defineControl({
   type: "text",
@@ -66,7 +66,7 @@ export const ratingControl = defineControl({
 ## 3. Creating & Extending the Registry
 
 ```tsx
-import { createMicroform } from "@microx-technologies/microform";
+import { createMicroform } from "microform";
 import { textControl } from "./controls/text";
 import { ratingControl } from "./controls/rating";
 

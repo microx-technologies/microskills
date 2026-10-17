@@ -66,7 +66,7 @@ Interactive elements that cause transitions MUST be wrapped with `<Trigger id=".
 ### Rule 3: Declarative Wiring via `defineFlow`
 Flows MUST be created using `defineFlow({ nodes, edges, positions? })`:
 ```tsx
-import { defineFlow } from "@microx-technologies/microwireflow/flow";
+import { defineFlow } from "microwireflow/flow";
 
 export const authFlow = defineFlow({
   nodes: [ ... ],
@@ -90,5 +90,5 @@ When manual layout tuning is performed on the canvas, authors export positions v
 ### Rule 7: Stylesheet Inclusion
 Any root application hosting `<Wireflow />` MUST import the package stylesheet:
 ```tsx
-import "@microx-technologies/microwireflow/styles.css";
+import "microwireflow/styles.css";
 ```

@@ -12,12 +12,12 @@ import {
   defineControl,
   type FieldStructure,
   cleanVars,
-} from "@microx-technologies/microform";
+} from "microform";
 import {
   FormFields,
   InferFieldInput,
   MicroformProvider,
-} from "@microx-technologies/microform/react";
+} from "microform/react";
 
 // 1. Zod Schema
 export const projectSchema = z.object({

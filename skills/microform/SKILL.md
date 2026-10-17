@@ -14,8 +14,8 @@ Headless, decoupled form engine adhering to **Ports and Adapters** and the **Ope
 
 ## Architecture
 
-- **Core (`@microx-technologies/microform`)**: Framework-agnostic. Registry (`createMicroform`), schema defaults (`createFormDefaults`), required field maps (`buildRequiredMap`), variable cleaner (`cleanVars`), memory adapter, and ports.
-- **React (`@microx-technologies/microform/react`)**: React 19 bindings. Context (`MicroformProvider`), dynamic dispatcher (`InferFieldInput`), layout coordinator (`FormFields`), persistence (`usePersistence`), and async search (`useAsyncQuery`).
+- **Core (`microform`)**: Framework-agnostic. Registry (`createMicroform`), schema defaults (`createFormDefaults`), required field maps (`buildRequiredMap`), variable cleaner (`cleanVars`), memory adapter, and ports.
+- **React (`microform/react`)**: React 19 bindings. Context (`MicroformProvider`), dynamic dispatcher (`InferFieldInput`), layout coordinator (`FormFields`), persistence (`usePersistence`), and async search (`useAsyncQuery`).
 
 ---
 

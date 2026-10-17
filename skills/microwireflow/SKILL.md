@@ -13,8 +13,8 @@ Code-first wireflow documentation engine for React applications. Renders real TS
 
 ## Architecture
 
-- **Canvas & Primitives (`@microx-technologies/microwireflow`)**: Full canvas renderer (`Wireflow`), trigger anchor wrapper (`Trigger`), image export utilities (`exportAsPng`, `exportAsSvg`), and stylesheet (`@microx-technologies/microwireflow/styles.css`).
-- **Flow Engine (`@microx-technologies/microwireflow/flow`)**: Lightweight flow definition and validation helper (`defineFlow`), node/edge type contracts (`FlowNode`, `FlowEdge`, `Flow`, `LineStyle`, `FlowPositions`).
+- **Canvas & Primitives (`microwireflow`)**: Full canvas renderer (`Wireflow`), trigger anchor wrapper (`Trigger`), image export utilities (`exportAsPng`, `exportAsSvg`), and stylesheet (`microwireflow/styles.css`).
+- **Flow Engine (`microwireflow/flow`)**: Lightweight flow definition and validation helper (`defineFlow`), node/edge type contracts (`FlowNode`, `FlowEdge`, `Flow`, `LineStyle`, `FlowPositions`).
 
 ---
 
@@ -29,7 +29,7 @@ Code-first wireflow documentation engine for React applications. Renders real TS
 2. **Trigger Anchoring**: Transitions MUST anchor to interactive elements wrapped with `<Trigger id="...">`. Trigger IDs MUST be unique within their screen.
 3. **Loud Validation via `defineFlow`**: Declare flows using `defineFlow({ nodes, edges, positions? })`. Never bypass validation; invalid edge triggers or dangling node IDs surface dev-time errors.
 4. **Docs-Only Honesty**: The canvas is strictly documentation. Trigger clicks navigate/focus target screens or open destination pickers; triggers NEVER execute application business logic or simulate state machines.
-5. **Stylesheet Requirement**: Any application hosting `<Wireflow />` MUST import `@microx-technologies/microwireflow/styles.css`.
+5. **Stylesheet Requirement**: Any application hosting `<Wireflow />` MUST import `microwireflow/styles.css`.
 
 ---
 
