@@ -9,13 +9,13 @@ The `<Wireflow />` component renders the full interactive React Flow canvas with
 Import `Wireflow` and the mandatory stylesheet from `microwireflow`:
 
 ```tsx
-// App.tsx
+// AuthDocs.tsx
 import * as React from "react";
 import { Wireflow } from "microwireflow";
 import "microwireflow/styles.css";
-import { authFlow } from "./flows/authFlow";
+import { authFlow } from "./flows/auth";
 
-export function App() {
+export function AuthDocs() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Wireflow
@@ -23,12 +23,16 @@ export function App() {
         showMinimap
         showSearch
         showControls
-        nodeWidth={360}
+        nodeWidth={420}
       />
     </div>
   );
 }
 ```
+
+> [!NOTE]
+> **Aesthetic Synergy with `microdraw-ui`:**
+> `<Wireflow />` provides built-in canvas chrome (search bar, node headers, minimap, annotations panel) utilizing the exact same Patrick Hand font, sketchy borders, and high-contrast neobrutalist lines as `microdraw-ui`. This ensures seamless visual harmony between the canvas chrome and the embedded screen components.
 
 ---
 
@@ -72,8 +76,8 @@ export type WireflowProps = {
   ```ts
   positions: {
     "login": { x: 80, y: 120 },
-    "dashboard": { x: 540, y: 120 },
-    "reset-password": { x: 80, y: 620 }
+    "home": { x: 540, y: 120 },
+    "logout-confirm": { x: 540, y: 620 }
   }
   ```
 - Pasting this object back into `defineFlow({ ..., positions })` commits the exact layout into source code.

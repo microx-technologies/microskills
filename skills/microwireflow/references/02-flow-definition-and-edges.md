@@ -9,53 +9,96 @@ Flows in `microwireflow` bind screen nodes and transition connectors together wi
 Import `defineFlow` from the dedicated lightweight subpath `microwireflow/flow`:
 
 ```tsx
-// flows/authFlow.tsx
+// flows/auth.tsx
 import * as React from "react";
 import { defineFlow } from "microwireflow/flow";
-import { LoginScreen } from "../screens/LoginScreen";
-import { DashboardScreen } from "../screens/DashboardScreen";
-import { ResetPasswordScreen } from "../screens/ResetPasswordScreen";
+import { Home } from "@/screens/Home";
+import { Login } from "@/screens/Login";
+import { LogoutConfirm } from "@/screens/LogoutConfirm";
+import { Reset } from "@/screens/Reset";
 
 export const authFlow = defineFlow({
   nodes: [
     {
       id: "login",
-      title: "Sign In",
+      title: "Login",
       kind: "<<screen>>",
-      component: <LoginScreen />,
-      notes: "Default entry point for unauthenticated visitors.",
+      component: <Login />,
+      notes: "Entry point. Submit branches on validity; both leaves stay visible.",
     },
     {
-      id: "dashboard",
-      title: "Main Dashboard",
-      kind: "<<screen>>",
-      component: <DashboardScreen />,
-      notes: "Requires active JWT session with role=user or role=admin.",
+      id: "login-error",
+      title: "Login",
+      kind: "<<error>>",
+      component: <Login error="Bad credentials — try again." />,
+      notes: "Error state, same file. Red-inked to read as a correction.",
     },
     {
-      id: "reset-password",
-      title: "Password Recovery",
+      id: "home",
+      title: "Home",
+      kind: "<<screen>>",
+      component: <Home />,
+      notes: "Signed-in landing. Logout asks first via a modal.",
+    },
+    {
+      id: "logout-confirm",
+      title: "Confirm logout",
       kind: "<<modal>>",
-      component: <ResetPasswordScreen />,
-      notes: "Sends 6-digit OTP code to registered email address.",
+      component: <LogoutConfirm />,
+      notes: "Modal kind proof: double-ruled badge. Confirm exits, cancel returns.",
+    },
+    {
+      id: "reset",
+      title: "Reset",
+      kind: "<<screen>>",
+      component: <Reset />,
+      notes: "Password reset screen. Form recovers access token.",
     },
   ],
   edges: [
     {
       from: "login",
-      trigger: "submit-login",
-      to: "dashboard",
-      label: "valid credentials",
+      trigger: "submit",
+      to: "home",
+      label: "if valid",
       lineStyle: "solid",
-      arrow: "closed",
     },
     {
       from: "login",
-      trigger: "forgot-password",
-      to: "reset-password",
-      label: "recovery request",
+      trigger: "submit",
+      to: "login-error",
+      label: "if invalid",
       lineStyle: "dashed",
-      arrow: "open",
+    },
+    {
+      from: "login",
+      trigger: "forgot",
+      to: "reset",
+      lineStyle: "dotted",
+    },
+    {
+      from: "home",
+      trigger: "logout",
+      to: "logout-confirm",
+      label: "tap",
+    },
+    {
+      from: "logout-confirm",
+      trigger: "confirm",
+      to: "login",
+      label: "yes, out",
+    },
+    {
+      from: "logout-confirm",
+      trigger: "cancel",
+      to: "home",
+      label: "stay",
+      lineStyle: "dashed",
+    },
+    {
+      from: "reset",
+      trigger: "send",
+      to: "login",
     },
   ],
 });
@@ -113,5 +156,5 @@ export type FlowEdge = {
 
 `defineFlow` executes validation during initialization:
 - **Dangling Targets**: If `to: "checkout"` is specified but no node with `id: "checkout"` exists, an error banner is shown with the exact line and node ID.
-- **Unmatched Triggers**: If `from: "login"` has no `<Trigger id="submit-login">` in its JSX, `defineFlow` alerts in console and overlay.
+- **Unmatched Triggers**: If `from: "login"` has no `<Trigger id="submit">` in its JSX, `defineFlow` alerts in console and overlay.
 - **Duplicate IDs**: Duplicate node IDs or duplicate trigger IDs within a single screen are flagged immediately.

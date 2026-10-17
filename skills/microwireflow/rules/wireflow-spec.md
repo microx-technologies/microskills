@@ -6,7 +6,7 @@
 - **User**: AI agents and design engineers creating UX navigation documentation, design handoffs, and flow maps.
 - **Why now**: Traditional diagrams (Figma, Mermaid, generic React Flow) either detach screens from actual frontend code or anchor edges blindly to the outer bounding box of nodes rather than specific interactive buttons/links.
 - **Success**: A complete 5-screen wireflow defined entirely in code with zero custom canvas CSS, where reviewers can trace every button directly to its destination screen.
-- **Constraints**: React 18 or 19, `@xyflow/react` ^12. Screen interiors are author-owned; canvas chrome, layout, and connector anchoring are engine-owned.
+- **Constraints**: React 18 or 19, `@xyflow/react` ^12, Tailwind CSS v4. Screen interiors MUST be authored exclusively using `microdraw-ui` components (`@/components/ui/*`); canvas chrome, layout, and connector anchoring are engine-owned.
 - **Out of scope**: State-machine execution, router simulation, live form validation inside screens, drag-and-drop wireframe builder UIs.
 
 ---
@@ -24,7 +24,7 @@ The canvas is strictly a **documentation and communication tool**:
 ## 3. Goals & Non-goals
 
 ### Goals
-- Code is single source of truth: Screens are real `.tsx` files importing shared design system components.
+- Code is single source of truth: Screens are real `.tsx` files importing components exclusively from `microdraw-ui`.
 - Exact element anchoring: Connectors emerge from the precise button or link causing the action via `<Trigger id="...">`.
 - Loud dev-time validation: Broken references (edges pointing to non-existent nodes or triggers) throw visible errors, never fail silently.
 - Pluggable layouts: Automated ELK layered hierarchical layout with optional manual coordinate overrides (`positions`).
@@ -40,7 +40,7 @@ The canvas is strictly a **documentation and communication tool**:
 
 | Concept | Meaning |
 | :--- | :--- |
-| **Screen Component** | Pure TSX component representing a page, modal, or step. Wrapped with zero extra markup. |
+| **Screen Component** | Pure TSX component representing a page, modal, or step, authored with `microdraw-ui`. Wrapped with zero extra markup. |
 | **Trigger** | Inline wrapper component (`<Trigger id="...">`) marking a clickable element as a connector source handle. |
 | **FlowNode** | Object declaring a screen node: `id`, `title`, optional `kind` (`<<screen>>`, `<<modal>>`), `component`, and `notes`. |
 | **FlowEdge** | Object declaring a transition: `from` (node ID), `trigger` (trigger ID), `to` (target node ID), optional `label`, `lineStyle`, `arrow`. |
@@ -54,8 +54,12 @@ The canvas is strictly a **documentation and communication tool**:
 
 Every wireflow built using `microwireflow` MUST comply with the following rules:
 
-### Rule 1: Single-Source TSX Screens
-Screens MUST be declared as real React functional components. They should import real design system primitives (buttons, inputs, cards) rather than placeholder HTML strings.
+### Rule 1: Single-Source TSX Screens Built Exclusively with `microdraw-ui`
+Screens MUST be declared as real React functional components importing primitives exclusively from **`microdraw-ui`** (`@/components/ui/button`, `@/components/ui/card`, `@/components/ui/input`, `@/components/ui/dialog`, etc.).
+- **Prohibited**: Never use raw, unstyled HTML interactive elements (`<button>`, `<input>`, `<select>`, `<dialog>`, `<textarea>`) when equivalent `microdraw-ui` components exist.
+- **Prohibited**: Never use any other third-party component libraries (standard shadcn/ui, Radix Themes, Material UI, Chakra UI, Ant Design, Mantine, NextUI).
+- **Styling & Layout**: Screens inherit the hand-drawn, sketchy neobrutalist aesthetic via `@fontsource/patrick-hand` and custom Tailwind CSS v4 tokens (`rounded-sketchy`, `rounded-sketchy-card`, `rounded-sketchy-pill`, `shadow-shadow`).
+- **Canonical Architecture**: Follow the exact architecture in `microwireflow/apps/demo`.
 
 ### Rule 2: Explicit Trigger Element Anchoring
 Interactive elements that cause transitions MUST be wrapped with `<Trigger id="...">`.

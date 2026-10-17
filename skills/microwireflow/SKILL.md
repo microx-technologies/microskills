@@ -2,19 +2,21 @@
 name: microwireflow
 description: >-
   Code-first wireflow documentation engine for React. Renders real TSX screen components
-  onto an interactive React Flow canvas with connectors anchored directly to trigger elements.
-  Use when building or documenting UI flows, wireflows, screen navigation maps, or interactive flow documentation.
+  authored exclusively with microdraw-ui onto an interactive React Flow canvas with connectors
+  anchored directly to trigger elements. Use when building or documenting UI flows, wireflows,
+  screen navigation maps, or interactive flow documentation.
   Do not use for general architecture diagrams without screens, backend flowcharts, or full app functional simulation.
 ---
 
 # Microwireflow Skill
 
-Code-first wireflow documentation engine for React applications. Renders real TSX screen components onto an interactive React Flow canvas with transition edges anchored directly to specific `<Trigger>` elements.
+Code-first wireflow documentation engine for React applications. Renders real TSX screen components—authored exclusively with **`microdraw-ui`**—onto an interactive React Flow canvas with transition edges anchored directly to specific `<Trigger>` elements.
 
 ## Architecture
 
 - **Canvas & Primitives (`microwireflow`)**: Full canvas renderer (`Wireflow`), trigger anchor wrapper (`Trigger`), image export utilities (`exportAsPng`, `exportAsSvg`), and stylesheet (`microwireflow/styles.css`).
 - **Flow Engine (`microwireflow/flow`)**: Lightweight flow definition and validation helper (`defineFlow`), node/edge type contracts (`FlowNode`, `FlowEdge`, `Flow`, `LineStyle`, `FlowPositions`).
+- **UI Component System (`microdraw-ui`)**: Hand-drawn sketchy neobrutalist components (`@/components/ui/*`) installed via the `@microdraw` registry, styled with Tailwind CSS v4 and `@fontsource/patrick-hand`.
 
 ---
 
@@ -25,7 +27,7 @@ Code-first wireflow documentation engine for React applications. Renders real TS
 > 👉 **[rules/wireflow-spec.md](rules/wireflow-spec.md)**
 
 ### Invariant Rules for Agents
-1. **Real TSX Screens**: Screens MUST be plain, single-source React TSX components. Never author screen contents as mock JSON or abstract schemas.
+1. **Exclusive UI Component Library (`microdraw-ui`)**: Screens MUST be plain TSX components authored strictly and exclusively with `microdraw-ui` components (`@/components/ui/button`, `@/components/ui/card`, `@/components/ui/input`, `@/components/ui/dialog`, etc.). Never use any other UI library (standard shadcn, MUI, Chakra, Ant Design, Radix Themes) or ad-hoc raw HTML interactive elements (`<button>`, `<input>`) when `microdraw-ui` primitives exist. Replicate the architecture in `microwireflow/apps/demo`.
 2. **Trigger Anchoring**: Transitions MUST anchor to interactive elements wrapped with `<Trigger id="...">`. Trigger IDs MUST be unique within their screen.
 3. **Loud Validation via `defineFlow`**: Declare flows using `defineFlow({ nodes, edges, positions? })`. Never bypass validation; invalid edge triggers or dangling node IDs surface dev-time errors.
 4. **Docs-Only Honesty**: The canvas is strictly documentation. Trigger clicks navigate/focus target screens or open destination pickers; triggers NEVER execute application business logic or simulate state machines.
