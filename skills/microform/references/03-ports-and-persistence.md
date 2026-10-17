@@ -7,7 +7,7 @@
 Any storage engine implements `StorageAdapter`:
 
 ```ts
-import type { StorageAdapter } from "microform";
+import type { StorageAdapter } from "@microx-technologies/microform";
 
 export function createLocalStorageAdapter(): StorageAdapter {
   return {
@@ -42,7 +42,7 @@ Binds a specific React Hook Form field to storage. Restores persisted value on m
 
 ```tsx
 import { useForm } from "react-hook-form";
-import { usePersistence } from "microform/react";
+import { usePersistence } from "@microx-technologies/microform/react";
 import { createLocalStorageAdapter } from "./adapters";
 
 const storage = createLocalStorageAdapter();

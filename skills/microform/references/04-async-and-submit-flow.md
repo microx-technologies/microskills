@@ -7,7 +7,7 @@
 Recursively cleans objects and arrays prior to mutation or query dispatch:
 
 ```ts
-import { cleanVars } from "microform";
+import { cleanVars } from "@microx-technologies/microform";
 
 const raw = {
   search: "  Jane Doe  ",
@@ -32,8 +32,8 @@ Handles built-in debouncing, stale response discard (race condition protection),
 
 ```tsx
 import { useState } from "react";
-import { useAsyncQuery } from "microform/react";
-import type { QuerySource } from "microform";
+import { useAsyncQuery } from "@microx-technologies/microform/react";
+import type { QuerySource } from "@microx-technologies/microform";
 
 interface UserItem {
   id: string;
@@ -76,8 +76,8 @@ export function UserSearchSelect() {
 Coordinates sanitization (`cleanVars({ empty: "null" })`), execution, toast notifications, form reset, and cache invalidation:
 
 ```ts
-import { handleSubmitFlow } from "microform";
-import type { NotifyAdapter } from "microform";
+import { handleSubmitFlow } from "@microx-technologies/microform";
+import type { NotifyAdapter } from "@microx-technologies/microform";
 import { toast } from "sonner";
 
 const notify: NotifyAdapter = {

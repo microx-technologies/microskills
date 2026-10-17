@@ -7,7 +7,7 @@
 Layouts organize fields into **sections**, **rows**, and **columns** using a 12-column grid budget:
 
 ```tsx
-import type { FieldStructure } from "microform";
+import type { FieldStructure } from "@microx-technologies/microform";
 
 export type UserFormValues = {
   fullName: string;
@@ -63,8 +63,8 @@ Binds React Hook Form to the structure. `renderItem` maps each field definition 
 
 ```tsx
 import { useForm } from "react-hook-form";
-import { createFormDefaults } from "microform";
-import { FormFields, InferFieldInput, MicroformProvider } from "microform/react";
+import { createFormDefaults } from "@microx-technologies/microform";
+import { FormFields, InferFieldInput, MicroformProvider } from "@microx-technologies/microform/react";
 import { microform } from "./microform-setup";
 import { userSchema, userStructure, type UserFormValues } from "./schema";
 
@@ -118,7 +118,7 @@ export function UserForm() {
 `StructForm` encapsulates `<form>` element handling and standard submit buttons:
 
 ```tsx
-import { StructForm } from "microform/react";
+import { StructForm } from "@microx-technologies/microform/react";
 
 <MicroformProvider value={microform}>
   <StructForm
