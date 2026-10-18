@@ -24,6 +24,15 @@ npx skills add microx-technologies/microskills --skill microwireflow
 npx skills add microx-technologies/microskills/skills/microwireflow
 ```
 
+### Install `microstory` skill
+```bash
+# Via --skill flag
+npx skills add microx-technologies/microskills --skill microstory
+
+# Or pointing directly to the skill subdirectory
+npx skills add microx-technologies/microskills/skills/microstory
+```
+
 ### Install interactively or pull all skills
 ```bash
 npx skills add microx-technologies/microskills
@@ -37,6 +46,7 @@ npx skills add microx-technologies/microskills
 | :--- | :--- | :--- |
 | **`microform`** | Headless form engine, Zod defaults derivation, 12-column grid layout, typed control registry, draft persistence, and submit orchestration. | [`skills/microform`](skills/microform) |
 | **`microwireflow`** | Code-first wireflow documentation for React: real TSX screens, trigger element connector anchoring, interactive canvas, and image export. | [`skills/microwireflow`](skills/microwireflow) |
+| **`microstory`** | Storybook modules/pages/sections for React: thin pages with frame, BARE self-contained sections, exclusive microdraw-ui usage. | [`skills/microstory`](skills/microstory) |
 
 ---
 
@@ -68,4 +78,14 @@ microskills/
             ├── 02-flow-definition-and-edges.md
             ├── 03-canvas-rendering-and-chrome.md
             └── 04-recipes-and-cheatsheet.md
+    └── microstory/
+        ├── SKILL.md            # Entry point: metadata, core rules, and capability router
+        ├── rules/              # Normative specifications
+        │   └── storybook-spec.md # Storybook construction specification (binding on agents)
+        └── references/         # On-demand technical references
+            ├── 01-folders-and-naming.md
+            ├── 02-page-vs-section-vs-shared.md
+            ├── 03-microdraw-and-styling.md
+            ├── 04-stories-and-storybook.md
+            └── 05-recipes-and-cheatsheet.md
 ```

@@ -12,7 +12,9 @@
     "microx",
     "microform",
     "microwireflow",
+    "microstory",
     "wireflow",
+    "storybook",
     "ai-agent"
   ],
   "author": "microx",
